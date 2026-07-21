@@ -1,16 +1,17 @@
 services:
   neko:
-    image: "ghcr.io/m1k1o/neko/firefox:latest"
+    build:
+      context: .
+      dockerfile: Dockerfile.browser-harness
+      args:
+        NEKO_VERSION: "3.1.4"
+    image: "neko-browser-harness:3.1.4"
     restart: "unless-stopped"
     shm_size: "2gb"
+    env_file:
+      - "./local.env"
     ports:
       - "8080:8080"
+      # Browser Harness only. Never expose the CDP endpoint publicly.
+      - "127.0.0.1:9223:9222"
       - "52000-52100:52000-52100/udp"
-    environment:
-      NEKO_DESKTOP_SCREEN: 1920x1080@30
-      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: neko
-      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: admin
-      NEKO_WEBRTC_EPR: 52000-52100
-      NEKO_WEBRTC_ICELITE: 1
-      # See: https://neko.m1k1o.net/docs/v3/configuration/webrtc#ip
-      # NEKO_NAT1TO1: <IP_ADDRESS>

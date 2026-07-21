@@ -1,19 +1,7 @@
 {
-    "name": "n.eko",
-    "short_name": "n.eko",
-    "icons": [
-        {
-            "src": "/android-chrome-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/android-chrome-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ],
-    "theme_color": "#19bd9c",
-    "background_color": "#19bd9c",
+    "name": "中恒科技浏览器协作平台",
+    "short_name": "中恒科技",
+    "theme_color": "#0f766e",
+    "background_color": "#202225",
     "display": "standalone"
 }

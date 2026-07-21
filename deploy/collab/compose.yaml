@@ -1,0 +1,59 @@
+name: neko-collab
+
+services:
+  neko:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEKO_VERSION: "3.1.4"
+    image: "neko-collab-google-chrome:3.1.4"
+    restart: unless-stopped
+    shm_size: "2gb"
+    environment:
+      NEKO_DESKTOP_SCREEN: "1280x720@30"
+      NEKO_MEMBER_PROVIDER: "multiuser"
+      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: "${NEKO_ADMIN_PASSWORD}"
+      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: "${NEKO_USER_PASSWORD}"
+      NEKO_WEBRTC_ICELITE: "1"
+      NEKO_WEBRTC_NAT1TO1: "8.134.166.10"
+      NEKO_WEBRTC_UDPMUX: "10081"
+      NEKO_WEBRTC_TCPMUX: "10082"
+      CHROME_PROXY_SERVER: "${CHROME_PROXY_SERVER:-http://192.168.1.8:10810}"
+      CHROME_PROXY_BYPASS_LIST: "${CHROME_PROXY_BYPASS_LIST:-<-loopback>;localhost;127.0.0.1;192.168.1.*}"
+    ports:
+      - "127.0.0.1:8080:8080/tcp"
+      - "127.0.0.1:9223:9222/tcp"
+      - "127.0.0.1:10081:10081/udp"
+      - "127.0.0.1:10082:10082/tcp"
+    volumes:
+      - chrome-profile:/home/neko/.config/google-chrome-browser-harness
+    logging:
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  frpc:
+    build:
+      context: .
+      dockerfile: Dockerfile.frpc
+      args:
+        FRP_VERSION: "0.51.3"
+        HTTP_PROXY: "${HTTP_PROXY:-}"
+        HTTPS_PROXY: "${HTTPS_PROXY:-}"
+        NO_PROXY: "${NO_PROXY:-}"
+    image: "neko-collab-frpc:0.51.3"
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      neko:
+        condition: service_healthy
+    volumes:
+      - ./frpc.ini:/etc/frp/frpc.ini:ro
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  chrome-profile:

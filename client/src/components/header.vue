@@ -1,9 +1,8 @@
 <template>
   <div class="header">
-    <a href="https://github.com/m1k1o/neko" title="Github repository" target="_blank" class="neko">
-      <img src="@/assets/images/logo.svg" alt="n.eko" />
-      <span><b>n</b>.eko</span>
-    </a>
+    <div title="中恒科技" class="brand">
+      <span>中恒科技</span>
+    </div>
     <ul class="menu">
       <li>
         <i
@@ -59,30 +58,21 @@
     flex-direction: row;
     align-items: center;
 
-    .neko {
+    .brand {
       flex: 1;
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      width: 150px;
+      width: 130px;
       margin-left: 20px;
       color: $text-normal;
       text-decoration: none;
 
-      img {
-        display: block;
-        float: left;
-        height: 30px;
-        margin-right: 10px;
-      }
-
       span {
-        font-size: 30px;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
         line-height: 30px;
-
-        b {
-          font-weight: 900;
-        }
       }
     }
 

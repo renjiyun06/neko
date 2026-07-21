@@ -1,0 +1,7 @@
+{
+  "devtools": {
+    "remote_debugging": {
+      "user-enabled": true
+    }
+  }
+}

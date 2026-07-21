@@ -1,9 +1,8 @@
 <template>
   <div class="connect">
     <div class="window">
-      <div class="logo" title="About n.eko" @click.stop.prevent="about">
-        <img src="@/assets/images/logo.svg" alt="n.eko" />
-        <span><b>n</b>.eko</span>
+      <div class="logo" title="中恒科技">
+        <span>中恒科技</span>
       </div>
       <form class="message" v-if="!connecting" @submit.stop.prevent="connect">
         <span v-if="!autoPassword">{{ $t('connect.login_title') }}</span>
@@ -47,20 +46,13 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
-
-        img {
-          height: 90px;
-          margin-right: 10px;
-        }
+        padding: 18px 0 12px;
 
         span {
           font-size: 30px;
-          line-height: 56px;
-
-          b {
-            font-weight: 900;
-          }
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          line-height: 1.2;
         }
       }
 
@@ -220,10 +212,6 @@
 
       this.$accessor.login({ displayname: this.displayname, password })
       this.autoPassword = null
-    }
-
-    about() {
-      this.$accessor.client.toggleAbout()
     }
   }
 </script>

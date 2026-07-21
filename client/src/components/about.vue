@@ -1,18 +1,11 @@
 <template>
   <div class="about" @click="toggle">
     <div class="window">
-      <div class="loading" v-if="loading">
-        <div class="logo">
-          <img src="@/assets/images/logo.svg" alt="n.eko" />
-          <span><b>N</b>.EKO</span>
-        </div>
-        <div class="loader">
-          <div class="bounce1"></div>
-          <div class="bounce2"></div>
-        </div>
+      <div class="brand">
+        <strong>中恒科技</strong>
+        <span>浏览器协作平台</span>
       </div>
-
-      <div class="markdown-body" v-if="!loading" v-html="about"></div>
+      <p>安全、便捷地共享浏览器操作环境。</p>
     </div>
   </div>
 </template>
@@ -20,113 +13,44 @@
 <style lang="scss" scoped>
   .about {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: rgba($color: $background-floating, $alpha: 0.8);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
     .window {
-      max-width: 70vw;
+      width: min(420px, calc(100vw - 40px));
+      padding: 36px;
+      border-radius: 12px;
       background: $background-secondary;
-      border-radius: 5px;
-      max-height: 70vh;
-      overflow-y: auto;
-      overflow-x: hidden;
+      box-shadow: $elevation-high;
+    }
 
-      &::-webkit-scrollbar {
-        width: 8px;
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      strong {
+        font-size: 28px;
+        letter-spacing: 0.08em;
       }
 
-      &::-webkit-scrollbar-track {
-        background-color: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: $background-tertiary;
-        border: 2px solid $background-primary;
-        border-radius: 4px;
-      }
-
-      &::-webkit-scrollbar-thumb:hover {
-        background-color: $background-floating;
-      }
-
-      .loading {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        .logo {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          margin: 40px 80px 0 80px;
-
-          img {
-            height: 90px;
-            margin-right: 10px;
-          }
-
-          span {
-            font-size: 30px;
-            line-height: 56px;
-
-            b {
-              font-weight: 900;
-            }
-          }
-        }
-
-        .loader {
-          width: 90px;
-          height: 90px;
-          position: relative;
-          margin: 0 auto 20px auto;
-
-          .bounce1,
-          .bounce2 {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background-color: $style-primary;
-            opacity: 0.6;
-            position: absolute;
-            top: 0;
-            left: 0;
-
-            -webkit-animation: bounce 2s infinite ease-in-out;
-            animation: bounce 2s infinite ease-in-out;
-          }
-
-          .bounce2 {
-            -webkit-animation-delay: -1s;
-            animation-delay: -1s;
-          }
-        }
-      }
-
-      .markdown-body {
-        margin: 50px 200px;
+      span {
+        color: $text-muted;
+        font-size: 14px;
+        letter-spacing: 0.12em;
       }
     }
-  }
 
-  @keyframes bounce {
-    0%,
-    100% {
-      transform: scale(0);
-      -webkit-transform: scale(0);
-    }
-    50% {
-      transform: scale(1);
-      -webkit-transform: scale(1);
+    p {
+      margin: 26px 0 0;
+      padding-top: 20px;
+      border-top: 1px solid $background-modifier-accent;
+      color: $interactive-normal;
+      line-height: 1.7;
     }
   }
 </style>
@@ -136,36 +60,6 @@
 
   @Component({ name: 'neko-about' })
   export default class extends Vue {
-    loading = false
-
-    get about() {
-      return this.$accessor.client.about_page
-    }
-
-    async Load() {
-      this.loading = true
-
-      try {
-        const res = await this.$http.get<string>('https://raw.githubusercontent.com/m1k1o/neko/master/README.md')
-        const res2 = await this.$http.post('https://api.github.com/markdown', {
-          text: res.data,
-          mode: 'gfm',
-          context: 'github/gollum',
-        })
-        this.$accessor.client.setAbout(res2.data)
-      } catch (err: any) {
-        console.error(err)
-      } finally {
-        this.loading = false
-      }
-    }
-
-    mounted() {
-      if (this.about === '') {
-        this.Load()
-      }
-    }
-
     toggle(event: { target?: HTMLElement }) {
       if (event.target && event.target.classList.contains('about')) {
         this.$accessor.client.toggleAbout()

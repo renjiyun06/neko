@@ -2,8 +2,7 @@
   <div class="unsupported">
     <div class="window">
       <div class="logo">
-        <img src="@/assets/images/logo.svg" alt="n.eko" />
-        <span><b>n</b>.eko</span>
+        <span>中恒科技</span>
       </div>
       <div class="message">
         <span>{{ $t('unsupported') }}</span>
@@ -36,19 +35,13 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-
-        img {
-          height: 90px;
-          margin-right: 10px;
-        }
+        padding: 18px 0 12px;
 
         span {
           font-size: 30px;
-          line-height: 56px;
-
-          b {
-            font-weight: 900;
-          }
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          line-height: 1.2;
         }
       }
 

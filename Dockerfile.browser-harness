@@ -1,0 +1,17 @@
+ARG NEKO_VERSION=3.1.4
+FROM ghcr.io/m1k1o/neko/chromium:${NEKO_VERSION}
+
+# Chromium binds its DevTools endpoint to the container loopback
+# interface. Relay it to a dedicated container port so Docker can publish it
+# back to the host loopback interface without exposing CDP publicly.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends socat \
+  && sed -i 's/"DeveloperToolsAvailability": 2/"DeveloperToolsAvailability": 0/' /etc/chromium/policies/managed/policies.json \
+  && grep -q '"DeveloperToolsAvailability": 0' /etc/chromium/policies/managed/policies.json \
+  && install -d -o neko -g neko /home/neko/.config/chromium-browser-harness \
+  && rm -rf /var/lib/apt/lists/*
+
+# Keep the upstream image intact and replace only the Chromium process
+# definition required for Browser Harness to attach over CDP.
+COPY --chown=neko:neko ["apps/chromium/local-state.browser-harness.json", "/home/neko/.config/chromium-browser-harness/Local State"]
+COPY apps/chromium/supervisord.browser-harness.conf /etc/neko/supervisord/chromium.conf
